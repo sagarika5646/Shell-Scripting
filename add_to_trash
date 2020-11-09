@@ -1,0 +1,63 @@
+#!/bin/sh
+#Script2 : Move files and directories to the trash directory in user's home directory
+#Date: Nov 4, 2020
+#Name: Sagarika
+#Student ID: A012057852
+# This script supersedes the rm utility. I added an alias in the .bashrc file to do so.
+
+# function displaying the usage message
+usage() {
+    echo "Usage: $0 [-d] DIRNAME" >&2
+    echo "-d DIRNAME provide the name of the directory"
+    echo "-r DIRNAME provide the name of the directory"
+    echo "Alternative Usage: rm filename" >&2
+    exit 1
+}
+
+DIR=~/.trash
+
+# creates the .trash directory in the user's folder if it doesn't already exist. 
+if [ ! -d $DIR ]; then
+    mkdir $DIR
+    echo "Directory has been created."
+fi
+
+#displays the usage message if no argument is provided
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
+
+# if arg is a file, moves it to .trash
+if [ $# -eq 1 ]; then
+    if [ -f $1 ]; then
+        mv "$(realpath $1)" $DIR
+        echo "$(basename $1) (file) has been moved to trash."
+    
+    #display the usage message to use -d option to move a directory to .trash
+    elif [ -d $1 ]; then
+        echo "Use -d option before the directory name."
+        echo "Usage: $0 [-d] DIRNAME"
+        exit 1
+    fi
+fi
+
+while getopts "d:r" opt; do
+    case $opt in 
+        d)
+            #move a directory to .trash
+            mv "$(realpath $2)" $DIR
+            echo "$(basename $2) (directory) has been moved to trash."
+            ;;
+        r)
+            #use the real rm utility
+            "rm" $2
+            echo "r opt was entered"
+            ;;
+        *)
+            #display the usage message when none of the options match.
+            usage
+            exit 1
+            ;;
+    esac
+done

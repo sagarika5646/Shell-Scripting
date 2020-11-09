@@ -1,0 +1,32 @@
+#!/bin/sh
+
+#Script1 : Remove spaces from the filenames and replace them with Hyphens.
+#Date: Nov 4, 2020
+#Name: Sagarika
+#Student ID: A012057852
+
+#assigns the arg provided to the cwd variable, assigns the current directory if no arg provided.
+if [ $# -eq 0 ]; then
+	cwd=$(pwd)
+elif [ -d "$1" ]; then
+    cwd="$1"
+else
+    echo "Optional first argument must be a directory"
+    echo "USAGE: $0 [directory]"
+    exit 1
+fi
+
+#replaces all the spaces in the filenames with hyphenes in the given directory.
+if [ "$(find $cwd -maxdepth 1 -type f)" != "" ]; then
+    for file in $cwd/*; do
+        if [ -f "$file" ]; then
+            newfile=$(echo "$file" | tr "-" " ")
+            if [ "$file" != "$newfile" ]; then
+                mv "$file" "$newfile" 
+            fi 
+        fi
+    done
+    echo "Spaces have been replaced with hyphen in all the filenames." 
+else
+    echo "$(basename $cwd) has no files."
+fi

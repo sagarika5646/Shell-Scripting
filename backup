@@ -1,0 +1,24 @@
+#!/bin/sh
+#Script3 : create a compressed archived backup and and move it to a backup directory.
+#Date: Nov 4, 2020
+#Name: Sagarika
+#Student ID: A012057852
+
+#assign the second arg (location of the backup directory) to a variable
+DIR=$2
+
+#display usage message
+if [ $# != 2 ]; then
+    echo "Usage: $0 [DIRECTORY TO BACKUP] [LOCATION OF BACKUP DIRECTORY]"
+    exit 1
+fi
+
+#create the directory given by user if it doesn't already exist.
+if [ ! -d $DIR ]; then
+    mkdir $DIR
+    echo "A backup directory has been created."
+fi
+
+#use the tar utility to create a compressed archive in the desired location
+tar -zcf $DIR/$(basename ${1}).tar.gz $1
+echo "A compressed and archived backup of $(basename $1) has been created in the $(basename $DIR) directory."
